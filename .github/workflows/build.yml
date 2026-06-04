@@ -48,10 +48,21 @@ jobs:
           cp achshali/app1-brain/AndroidManifest.xml AchshaliBrain/app/src/main/
           cp achshali/app1-brain/activity_main.xml AchshaliBrain/app/src/main/res/layout/
           mkdir -p AchshaliBrain/app/src/main/res/mipmap-hdpi
-          echo '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@color/ic_launcher_background"/><foreground android:drawable="@mipmap/ic_launcher_foreground"/></adaptive-icon>' > AchshaliBrain/app/src/main/res/mipmap-hdpi/ic_launcher.xml
+          cp /usr/local/lib/android/sdk/platforms/android-34/data/res/drawable/ic_launcher_background.xml AchshaliBrain/app/src/main/res/mipmap-hdpi/ic_launcher.png 2>/dev/null || convert -size 108x108 xc:#00E5FF AchshaliBrain/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          cp AchshaliBrain/app/src/main/res/mipmap-hdpi/ic_launcher.png AchshaliBrain/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
           mkdir -p AchshaliBrain/app/src/main/res/values
-          echo '<?xml version="1.0" encoding="utf-8"?><resources><color name="ic_launcher_background">#00E5FF</color></resources>' > AchshaliBrain/app/src/main/res/values/colors.xml
-
+          cat > AchshaliBrain/app/src/main/res/values/colors.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="ic_launcher_background">#00E5FF</color>
+          </resources>
+          EOF
+          cat > AchshaliBrain/app/src/main/res/values/themes.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <style name="Theme.Achshali" parent="Theme.MaterialComponents.DayNight.DarkActionBar"/>
+          </resources>
+          EOF
           cat > AchshaliBrain/settings.gradle << 'EOF'
           pluginManagement {
               repositories { google(); mavenCentral(); gradlePluginPortal() }
@@ -125,9 +136,21 @@ jobs:
           cp achshali/app2-controller/AndroidManifest.xml AchshaliController/app/src/main/
           cp achshali/app2-controller/activity_controller.xml AchshaliController/app/src/main/res/layout/
           mkdir -p AchshaliController/app/src/main/res/mipmap-hdpi
-          echo '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@color/ic_launcher_background"/><foreground android:drawable="@mipmap/ic_launcher_foreground"/></adaptive-icon>' > AchshaliController/app/src/main/res/mipmap-hdpi/ic_launcher.xml
+          convert -size 108x108 xc:#7C4DFF AchshaliController/app/src/main/res/mipmap-hdpi/ic_launcher.png 2>/dev/null || true
+          cp AchshaliController/app/src/main/res/mipmap-hdpi/ic_launcher.png AchshaliController/app/src/main/res/mipmap-hdpi/ic_launcher_round.png 2>/dev/null || true
           mkdir -p AchshaliController/app/src/main/res/values
-          echo '<?xml version="1.0" encoding="utf-8"?><resources><color name="ic_launcher_background">#00E5FF</color></resources>' > AchshaliController/app/src/main/res/values/colors.xml
+          cat > AchshaliController/app/src/main/res/values/colors.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="ic_launcher_background">#7C4DFF</color>
+          </resources>
+          EOF
+          cat > AchshaliController/app/src/main/res/values/themes.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <style name="Theme.AchshaliController" parent="Theme.MaterialComponents.DayNight.DarkActionBar"/>
+          </resources>
+          EOF
           cat > AchshaliController/settings.gradle << 'EOF'
           pluginManagement {
               repositories { google(); mavenCentral(); gradlePluginPortal() }
