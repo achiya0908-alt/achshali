@@ -24,14 +24,14 @@ jobs:
 
       - name: Install Android SDK
         run: |
-          sudo apt-get install -y wget unzip
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
           mkdir -p $HOME/android-sdk/cmdline-tools
           unzip -q commandlinetools-linux-11076708_latest.zip -d $HOME/android-sdk/cmdline-tools
           mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+          export ANDROID_HOME=$HOME/android-sdk
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
           echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
-          unset ANDROID_SDK_ROOT || true
           echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
           echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
@@ -64,6 +64,12 @@ jobs:
               id 'com.android.application' version '8.3.0' apply false
               id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
           }
+          EOF
+
+          cat > AchshaliBrain/gradle.properties << 'EOF'
+          android.useAndroidX=true
+          android.enableJetifier=true
+          org.gradle.jvmargs=-Xmx2048m
           EOF
 
           cat > AchshaliBrain/app/build.gradle << 'EOF'
@@ -101,8 +107,8 @@ jobs:
           EOF
 
           cd AchshaliBrain
-          gradle wrapper
-          ./gradlew assembleDebug --no-daemon
+          gradle wrapper --gradle-version 8.6
+          ./gradlew assembleDebug --no-daemon --warning-mode=none
 
       - name: Build Controller APK
         run: |
@@ -131,6 +137,12 @@ jobs:
               id 'com.android.application' version '8.3.0' apply false
               id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
           }
+          EOF
+
+          cat > AchshaliController/gradle.properties << 'EOF'
+          android.useAndroidX=true
+          android.enableJetifier=true
+          org.gradle.jvmargs=-Xmx2048m
           EOF
 
           cat > AchshaliController/app/build.gradle << 'EOF'
@@ -167,8 +179,8 @@ jobs:
           EOF
 
           cd AchshaliController
-          gradle wrapper
-          ./gradlew assembleDebug --no-daemon
+          gradle wrapper --gradle-version 8.6
+          ./gradlew assembleDebug --no-daemon --warning-mode=none
 
       - name: Upload Brain APK
         uses: actions/upload-artifact@v4
