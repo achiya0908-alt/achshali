@@ -94,13 +94,13 @@ jobs:
           gradle assembleDebug --no-daemon
 
       - name: Upload Brain APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: achshali-brain-apk
           path: AchshaliBrain/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload Controller APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: achshali-controller-apk
           path: AchshaliController/app/build/outputs/apk/debug/app-debug.apk
