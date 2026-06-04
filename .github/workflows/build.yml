@@ -21,6 +21,25 @@ jobs:
 
       - name: Extract ZIP
         run: unzip achshali-complete.zip
+        - name: Install ImageMagick
+        run: sudo apt-get install -y imagemagick python3-pil
+
+      - name: Create Icons
+        run: |
+          python3 << 'EOF'
+          from PIL import Image, ImageDraw
+          import os
+          
+          def make_icon(path, color):
+              os.makedirs(os.path.dirname(path), exist_ok=True)
+              img = Image.new('RGB', (108, 108), color)
+              img.save(path)
+          
+          make_icon('AchshaliBrain/app/src/main/res/mipmap-hdpi/ic_launcher.png', '#00E5FF')
+          make_icon('AchshaliBrain/app/src/main/res/mipmap-hdpi/ic_launcher_round.png', '#00E5FF')
+          make_icon('AchshaliController/app/src/main/res/mipmap-hdpi/ic_launcher.png', '#7C4DFF')
+          make_icon('AchshaliController/app/src/main/res/mipmap-hdpi/ic_launcher_round.png', '#7C4DFF')
+          EOF
 
       - name: Install Android SDK
         run: |
