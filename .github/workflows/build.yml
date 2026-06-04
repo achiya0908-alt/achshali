@@ -26,6 +26,9 @@ jobs:
         run: |
           mkdir -p AchshaliBrain/app/src/main/java/com/achshali/brain
           mkdir -p AchshaliBrain/app/src/main/res/layout
+             - name: Extract ZIP
+                run: |
+                    unzip achshali-complete.zip
           cp achshali/app1-brain/MainActivity.kt AchshaliBrain/app/src/main/java/com/achshali/brain/
           cp achshali/app1-brain/WakeWordService.kt AchshaliBrain/app/src/main/java/com/achshali/brain/
           cp achshali/app1-brain/BootReceiver.kt AchshaliBrain/app/src/main/java/com/achshali/brain/
