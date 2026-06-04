@@ -61,7 +61,7 @@ jobs:
 
           cat > AchshaliBrain/build.gradle << 'EOF'
           plugins {
-              id 'com.android.application' version '8.2.0' apply false
+              id 'com.android.application' version '8.3.0' apply false
               id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
           }
           EOF
@@ -97,7 +97,7 @@ jobs:
           EOF
 
           cat > AchshaliBrain/gradle/wrapper/gradle-wrapper.properties << 'EOF'
-          distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.6-bin.zip
           EOF
 
           cd AchshaliBrain
@@ -128,7 +128,7 @@ jobs:
 
           cat > AchshaliController/build.gradle << 'EOF'
           plugins {
-              id 'com.android.application' version '8.2.0' apply false
+              id 'com.android.application' version '8.3.0' apply false
               id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
           }
           EOF
@@ -163,7 +163,7 @@ jobs:
           EOF
 
           cat > AchshaliController/gradle/wrapper/gradle-wrapper.properties << 'EOF'
-          distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.6-bin.zip
           EOF
 
           cd AchshaliController
