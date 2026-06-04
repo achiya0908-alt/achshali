@@ -47,6 +47,10 @@ jobs:
           cp achshali/app1-brain/BootReceiver.kt AchshaliBrain/app/src/main/java/com/achshali/brain/
           cp achshali/app1-brain/AndroidManifest.xml AchshaliBrain/app/src/main/
           cp achshali/app1-brain/activity_main.xml AchshaliBrain/app/src/main/res/layout/
+          mkdir -p AchshaliBrain/app/src/main/res/mipmap-hdpi
+          echo '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@color/ic_launcher_background"/><foreground android:drawable="@mipmap/ic_launcher_foreground"/></adaptive-icon>' > AchshaliBrain/app/src/main/res/mipmap-hdpi/ic_launcher.xml
+          mkdir -p AchshaliBrain/app/src/main/res/values
+          echo '<?xml version="1.0" encoding="utf-8"?><resources><color name="ic_launcher_background">#00E5FF</color></resources>' > AchshaliBrain/app/src/main/res/values/colors.xml
 
           cat > AchshaliBrain/settings.gradle << 'EOF'
           pluginManagement {
@@ -120,7 +124,10 @@ jobs:
           cp achshali/app2-controller/BootReceiver.kt AchshaliController/app/src/main/java/com/achshali/controller/
           cp achshali/app2-controller/AndroidManifest.xml AchshaliController/app/src/main/
           cp achshali/app2-controller/activity_controller.xml AchshaliController/app/src/main/res/layout/
-
+          mkdir -p AchshaliController/app/src/main/res/mipmap-hdpi
+          echo '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@color/ic_launcher_background"/><foreground android:drawable="@mipmap/ic_launcher_foreground"/></adaptive-icon>' > AchshaliController/app/src/main/res/mipmap-hdpi/ic_launcher.xml
+          mkdir -p AchshaliController/app/src/main/res/values
+          echo '<?xml version="1.0" encoding="utf-8"?><resources><color name="ic_launcher_background">#00E5FF</color></resources>' > AchshaliController/app/src/main/res/values/colors.xml
           cat > AchshaliController/settings.gradle << 'EOF'
           pluginManagement {
               repositories { google(); mavenCentral(); gradlePluginPortal() }
