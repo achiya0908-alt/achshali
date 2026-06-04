@@ -19,80 +19,154 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Extract ZIP
-        run: |
-          unzip achshali-complete.zip
+        run: unzip achshali-complete.zip
 
-      - name: Create Brain project structure
+      - name: Install Android SDK
+        run: |
+          sudo apt-get install -y wget unzip
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          unzip -q commandlinetools-linux-11076708_latest.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Build Brain APK
         run: |
           mkdir -p AchshaliBrain/app/src/main/java/com/achshali/brain
           mkdir -p AchshaliBrain/app/src/main/res/layout
+          mkdir -p AchshaliBrain/gradle/wrapper
           cp achshali/app1-brain/MainActivity.kt AchshaliBrain/app/src/main/java/com/achshali/brain/
           cp achshali/app1-brain/WakeWordService.kt AchshaliBrain/app/src/main/java/com/achshali/brain/
           cp achshali/app1-brain/BootReceiver.kt AchshaliBrain/app/src/main/java/com/achshali/brain/
           cp achshali/app1-brain/AndroidManifest.xml AchshaliBrain/app/src/main/
           cp achshali/app1-brain/activity_main.xml AchshaliBrain/app/src/main/res/layout/
-          cp achshali/app1-brain/build.gradle AchshaliBrain/app/build.gradle
 
-      - name: Create Brain Gradle files
-        run: |
-          cat > AchshaliBrain/build.gradle << 'EOF'
-          buildscript {
-              repositories { google(); mavenCentral() }
-              dependencies {
-                  classpath 'com.android.tools.build:gradle:8.2.0'
-                  classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
-              }
-          }
-          EOF
           cat > AchshaliBrain/settings.gradle << 'EOF'
+          pluginManagement {
+              repositories { google(); mavenCentral(); gradlePluginPortal() }
+          }
+          dependencyResolutionManagement {
+              repositories { google(); mavenCentral() }
+          }
+          rootProject.name = "AchshaliBrain"
           include ':app'
           EOF
-          cat > AchshaliBrain/gradle.properties << 'EOF'
-          android.useAndroidX=true
+
+          cat > AchshaliBrain/build.gradle << 'EOF'
+          plugins {
+              id 'com.android.application' version '8.2.0' apply false
+              id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
+          }
           EOF
 
-      - name: Build Brain APK
-        run: |
-          cd AchshaliBrain
-          gradle assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none
+          cat > AchshaliBrain/app/build.gradle << 'EOF'
+          plugins {
+              id 'com.android.application'
+              id 'org.jetbrains.kotlin.android'
+          }
+          android {
+              namespace 'com.achshali.brain'
+              compileSdk 34
+              defaultConfig {
+                  applicationId "com.achshali.brain"
+                  minSdk 26
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_1_8
+                  targetCompatibility JavaVersion.VERSION_1_8
+              }
+              kotlinOptions { jvmTarget = '1.8' }
+          }
+          dependencies {
+              implementation 'androidx.core:core-ktx:1.12.0'
+              implementation 'androidx.appcompat:appcompat:1.6.1'
+              implementation 'com.google.android.material:material:1.11.0'
+              implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+              implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+          }
+          EOF
 
-      - name: Create Controller project structure
+          cat > AchshaliBrain/gradle/wrapper/gradle-wrapper.properties << 'EOF'
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip
+          EOF
+
+          cd AchshaliBrain
+          gradle wrapper
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Build Controller APK
         run: |
           mkdir -p AchshaliController/app/src/main/java/com/achshali/controller
           mkdir -p AchshaliController/app/src/main/res/layout
+          mkdir -p AchshaliController/gradle/wrapper
           cp achshali/app2-controller/MainActivity.kt AchshaliController/app/src/main/java/com/achshali/controller/
           cp achshali/app2-controller/PhoneActionReceiver.kt AchshaliController/app/src/main/java/com/achshali/controller/
           cp achshali/app2-controller/BootReceiver.kt AchshaliController/app/src/main/java/com/achshali/controller/
           cp achshali/app2-controller/AndroidManifest.xml AchshaliController/app/src/main/
           cp achshali/app2-controller/activity_controller.xml AchshaliController/app/src/main/res/layout/
-          cp achshali/app2-controller/build.gradle AchshaliController/app/build.gradle
 
-      - name: Create Controller Gradle files
-        run: |
-          cat > AchshaliController/build.gradle << 'EOF'
-          buildscript {
-              repositories { google(); mavenCentral() }
-              dependencies {
-                  classpath 'com.android.tools.build:gradle:8.2.0'
-                  classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
-              }
-          }
-          EOF
           cat > AchshaliController/settings.gradle << 'EOF'
+          pluginManagement {
+              repositories { google(); mavenCentral(); gradlePluginPortal() }
+          }
+          dependencyResolutionManagement {
+              repositories { google(); mavenCentral() }
+          }
+          rootProject.name = "AchshaliController"
           include ':app'
           EOF
-          cat > AchshaliController/gradle.properties << 'EOF'
-          android.useAndroidX=true
+
+          cat > AchshaliController/build.gradle << 'EOF'
+          plugins {
+              id 'com.android.application' version '8.2.0' apply false
+              id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
+          }
           EOF
 
-      - name: Build Controller APK
-        run: |
+          cat > AchshaliController/app/build.gradle << 'EOF'
+          plugins {
+              id 'com.android.application'
+              id 'org.jetbrains.kotlin.android'
+          }
+          android {
+              namespace 'com.achshali.controller'
+              compileSdk 34
+              defaultConfig {
+                  applicationId "com.achshali.controller"
+                  minSdk 26
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_1_8
+                  targetCompatibility JavaVersion.VERSION_1_8
+              }
+              kotlinOptions { jvmTarget = '1.8' }
+          }
+          dependencies {
+              implementation 'androidx.core:core-ktx:1.12.0'
+              implementation 'androidx.appcompat:appcompat:1.6.1'
+              implementation 'com.google.android.material:material:1.11.0'
+              implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+          }
+          EOF
+
+          cat > AchshaliController/gradle/wrapper/gradle-wrapper.properties << 'EOF'
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip
+          EOF
+
           cd AchshaliController
-          gradle assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none
+          gradle wrapper
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload Brain APK
         uses: actions/upload-artifact@v4
