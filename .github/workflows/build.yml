@@ -44,7 +44,7 @@ jobs:
               repositories { google(); mavenCentral() }
               dependencies {
                   classpath 'com.android.tools.build:gradle:8.2.0'
-                  classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0'
+                  classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
               }
           }
           EOF
@@ -58,7 +58,7 @@ jobs:
       - name: Build Brain APK
         run: |
           cd AchshaliBrain
-          gradle assembleDebug --no-daemon
+          gradle assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none
 
       - name: Create Controller project structure
         run: |
@@ -78,7 +78,7 @@ jobs:
               repositories { google(); mavenCentral() }
               dependencies {
                   classpath 'com.android.tools.build:gradle:8.2.0'
-                  classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0'
+                  classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
               }
           }
           EOF
@@ -92,7 +92,7 @@ jobs:
       - name: Build Controller APK
         run: |
           cd AchshaliController
-          gradle assembleDebug --no-daemon
+          gradle assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none -Dorg.gradle.jvmargs="-Xmx2g" --warning-mode=none
 
       - name: Upload Brain APK
         uses: actions/upload-artifact@v4
